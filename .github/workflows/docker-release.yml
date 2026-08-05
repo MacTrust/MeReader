@@ -22,7 +22,7 @@ jobs:
               with:
                   registry: ghcr.io
                   username: 'wu21-web'
-                  password: ${{ secrets.GITHUB_TOKEN }}
+                  password: ${{ secrets.DOCKER_TOKEN }}
             
             - name: Print additional debug info
               run: |
