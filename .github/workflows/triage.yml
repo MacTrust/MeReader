@@ -1,0 +1,23 @@
+name: PR Triage / Maintainence
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
+
+permissions: 
+  pull-requests: write
+  contents: read
+
+jobs:
+  triage:
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Approve Dependabot PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr review ${{ github.event.pull_request.number }} --approve
+          gh pr merge ${{ github.event.pull_request.number }} --auto-merge
