@@ -17,7 +17,7 @@ const LOCAL_BROWSER_PATHS: Partial<Record<NodeJS.Platform, string[]>> = {
             "Google Chrome.app",
             "Contents",
             "MacOS",
-            "Google Chrome"
+            "Google Chrome",
           ),
           path.join(
             process.env.HOME,
@@ -25,7 +25,7 @@ const LOCAL_BROWSER_PATHS: Partial<Record<NodeJS.Platform, string[]>> = {
             "Chromium.app",
             "Contents",
             "MacOS",
-            "Chromium"
+            "Chromium",
           ),
         ]
       : []),
@@ -46,7 +46,13 @@ let chromiumMod: typeof SparticuzChromium | undefined;
 let puppeteerMod: typeof PuppeteerCore | undefined;
 
 function chromiumBinPath(): string {
-  return path.join(process.cwd(), "node_modules", "@sparticuz", "chromium", "bin");
+  return path.join(
+    process.cwd(),
+    "node_modules",
+    "@sparticuz",
+    "chromium",
+    "bin",
+  );
 }
 
 function firstExistingPath(paths: string[]): string | undefined {
@@ -67,7 +73,7 @@ function localBrowserExecutablePath(): string | undefined {
 }
 
 export async function launchChromiumBrowser(
-  defaultViewport: Viewport
+  defaultViewport: Viewport,
 ): Promise<Browser> {
   if (!chromiumMod || !puppeteerMod) {
     [chromiumMod, puppeteerMod] = await Promise.all([
@@ -85,7 +91,8 @@ export async function launchChromiumBrowser(
   return puppeteer.launch({
     args: localExecutablePath ? [] : chromium.args,
     defaultViewport,
-    executablePath: localExecutablePath ?? (await chromium.executablePath(chromiumBinPath())),
+    executablePath:
+      localExecutablePath ?? (await chromium.executablePath(chromiumBinPath())),
     headless: localExecutablePath ? true : CHROMIUM_HEADLESS_MODE,
   });
 }

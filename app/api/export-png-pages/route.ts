@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import JSZip from "jszip";
 import { safeSessionPath } from "@/lib/cleanup";
-import { deriveExportTitle, escapeHtml, sanitizeFileName } from "@/lib/exportTitle";
+import {
+  deriveExportTitle,
+  escapeHtml,
+  sanitizeFileName,
+} from "@/lib/exportTitle";
 import { launchChromiumBrowser } from "@/lib/browser";
 
 export const runtime = "nodejs";
@@ -57,7 +61,7 @@ export async function POST(req: NextRequest) {
         const totalHeight = await page.evaluate(() => {
           return Math.max(
             document.body.scrollHeight,
-            document.documentElement.scrollHeight
+            document.documentElement.scrollHeight,
           );
         });
 
@@ -93,7 +97,7 @@ export async function POST(req: NextRequest) {
           headers: {
             "Content-Type": "application/zip",
             "Content-Disposition": `attachment; filename="${encodeURIComponent(
-              safeBase
+              safeBase,
             )}_png_pages.zip"`,
           },
         });
@@ -104,7 +108,7 @@ export async function POST(req: NextRequest) {
       console.error("Chromium/puppeteer PNG export error:", err);
       return NextResponse.json(
         { error: "PNG generation failed. Please try again." },
-        { status: 503 }
+        { status: 503 },
       );
     }
   } catch (err) {
@@ -178,4 +182,3 @@ function buildHtmlPage(bodyHtml: string, title: string): string {
 </body>
 </html>`;
 }
-

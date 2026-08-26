@@ -6,7 +6,7 @@ import fs from "fs";
 
 async function collectMarkdownFiles(
   dir: string,
-  baseDir: string
+  baseDir: string,
 ): Promise<string[]> {
   const result: string[] = [];
   let entries;
@@ -34,7 +34,10 @@ export async function GET(req: NextRequest) {
   const sessionId = searchParams.get("sessionId") ?? "";
 
   if (!sessionId) {
-    return NextResponse.json({ error: "sessionId is required" }, { status: 400 });
+    return NextResponse.json(
+      { error: "sessionId is required" },
+      { status: 400 },
+    );
   }
 
   const sessionDir = safeSessionPath(sessionId, ".");
@@ -44,7 +47,7 @@ export async function GET(req: NextRequest) {
 
   const files = await collectMarkdownFiles(
     path.join(UPLOAD_DIR, path.basename(sessionId)),
-    path.join(UPLOAD_DIR, path.basename(sessionId))
+    path.join(UPLOAD_DIR, path.basename(sessionId)),
   );
 
   return NextResponse.json({ files });

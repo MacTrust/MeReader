@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
   if (!sessionId || !filePath) {
     return NextResponse.json(
       { error: "sessionId and path are required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 

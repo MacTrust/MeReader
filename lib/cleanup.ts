@@ -26,8 +26,7 @@ export function cleanupExpiredSessions(): void {
       try {
         const meta = JSON.parse(fs.readFileSync(metaPath, "utf-8"));
         uploadedAt = meta.uploadedAt ?? null;
-      } catch {
-      }
+      } catch {}
     }
 
     if (uploadedAt === null) {
@@ -57,7 +56,7 @@ export function createSession(sessionId: string): string {
 
 export function safeSessionPath(
   sessionId: string,
-  relativePath: string
+  relativePath: string,
 ): string | null {
   const sanitisedSession = path.basename(sessionId);
   const sessionDir = path.join(UPLOAD_DIR, sanitisedSession);

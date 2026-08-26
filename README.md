@@ -1,4 +1,5 @@
 # MeReader
+
 [![CI / Test and Build](https://github.com/MacTrust/MeReader/actions/workflows/ci-test-build.yml/badge.svg)](https://github.com/MacTrust/MeReader/actions/workflows/ci-test-build.yml)
 
 **Multi-Tab GitHub-Flavored Markdown (GFM) Live Previewer & PDF Exporter**
@@ -23,15 +24,16 @@ Upload a local folder of `.md` files and preview them instantly with 1:1 GitHub 
 
 ## Tech Stack
 
-| Layer | Choice |
-|-------|--------|
-| Framework | [Next.js 16](https://nextjs.org/) (App Router, TypeScript) |
-| Styling | [Tailwind CSS v4](https://tailwindcss.com/) + GitHub Primer-inspired markdown CSS |
-| Markdown | `react-markdown`, `remark-gfm`, `remark-frontmatter`, `rehype-raw`, `rehype-sanitize`, `rehype-highlight` |
-| PDF/PNG Rendering | `puppeteer-core` + `@sparticuz/chromium` |
-| Cleanup | `node-cron` — hourly sweep of sessions older than 24 h |
+| Layer             | Choice                                                                                                    |
+| ----------------- | --------------------------------------------------------------------------------------------------------- |
+| Framework         | [Next.js 16](https://nextjs.org/) (App Router, TypeScript)                                                |
+| Styling           | [Tailwind CSS v4](https://tailwindcss.com/) + GitHub Primer-inspired markdown CSS                         |
+| Markdown          | `react-markdown`, `remark-gfm`, `remark-frontmatter`, `rehype-raw`, `rehype-sanitize`, `rehype-highlight` |
+| PDF/PNG Rendering | `puppeteer-core` + `@sparticuz/chromium`                                                                  |
+| Cleanup           | `node-cron` — hourly sweep of sessions older than 24 h                                                    |
 
 ## FAQs
+
 Q: Is server behaviour on Vercel reliable?
 A: No. Non-pro Vercel user has time limit for launching chromium. To contribute, fork the repo and run on a local server instead. Submit a pull request for your patch.
 
@@ -62,14 +64,14 @@ npm start
 
 ## API Routes
 
-| Method | Path | Description |
-|--------|------|-------------|
-| `POST` | `/api/upload` | Upload folder files (multipart/form-data: `files[]` + `paths[]`) |
-| `GET` | `/api/list-files?sessionId=<id>` | List `.md` files in a session |
-| `GET` | `/api/file-content?sessionId=<id>&path=<rel>` | Fetch file contents |
-| `POST` | `/api/export-pdf` | Convert rendered HTML to PDF |
-| `POST` | `/api/export-png-pages` | Convert rendered HTML to a ZIP of page-sliced PNGs |
-| `POST` | `/api/convert-md` | Upload one `.md` file and export directly to PDF or PNG |
+| Method | Path                                          | Description                                                      |
+| ------ | --------------------------------------------- | ---------------------------------------------------------------- |
+| `POST` | `/api/upload`                                 | Upload folder files (multipart/form-data: `files[]` + `paths[]`) |
+| `GET`  | `/api/list-files?sessionId=<id>`              | List `.md` files in a session                                    |
+| `GET`  | `/api/file-content?sessionId=<id>&path=<rel>` | Fetch file contents                                              |
+| `POST` | `/api/export-pdf`                             | Convert rendered HTML to PDF                                     |
+| `POST` | `/api/export-png-pages`                       | Convert rendered HTML to a ZIP of page-sliced PNGs               |
+| `POST` | `/api/convert-md`                             | Upload one `.md` file and export directly to PDF or PNG          |
 
 ### `POST /api/convert-md`
 
@@ -88,7 +90,9 @@ Response content types:
 - `format=png&pngMode=single` -> `image/png`
 
 #### curl examples
+
 You should replace 'your-domain.com' to your deployment server or a vercel server (me-reader-gray.vercel.app)
+
 ```bash
 # PDF
 curl -L -X POST "https://your-domain.com/api/convert-md" \
@@ -126,9 +130,11 @@ with open("README.md", "rb") as f:
 with open("README.pdf", "wb") as out:
     out.write(response.content)
 ```
+
 #### HTML Example
 
 There is a renderer component in MarkdownPreview.tsx. Below is an example.
+
 ```
 <!doctype html>
 <html lang="en">
@@ -184,6 +190,7 @@ There is a renderer component in MarkdownPreview.tsx. Below is an example.
 </body>
 </html>
 ```
+
 ### HTTPS Note
 
 The route is standard HTTP and works over HTTPS automatically when deployed behind TLS (for example Vercel, Nginx, Cloudflare, or other reverse proxies). Use `https://` URLs in Python/curl clients in production.

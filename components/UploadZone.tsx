@@ -3,9 +3,7 @@
 import { useRef } from "react";
 
 interface UploadZoneProps {
-  onFilesLoaded: (
-    files: { name: string; content: string }[]
-  ) => void;
+  onFilesLoaded: (files: { name: string; content: string }[]) => void;
 }
 
 export default function UploadZone({ onFilesLoaded }: UploadZoneProps) {
@@ -95,7 +93,9 @@ export default function UploadZone({ onFilesLoaded }: UploadZoneProps) {
           Drop markdown files or choose what to upload
         </p>
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          Upload a folder of markdown files or a single <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">.md</code> file.
+          Upload a folder of markdown files or a single{" "}
+          <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">.md</code>{" "}
+          file.
         </p>
         <div className="mt-2 flex flex-wrap items-center justify-center gap-2">
           <button

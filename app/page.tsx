@@ -19,7 +19,10 @@ function makeUniqueName(baseName: string, existingNames: Set<string>): string {
     return baseName;
   }
 
-  const lastSlash = Math.max(baseName.lastIndexOf("/"), baseName.lastIndexOf("\\"));
+  const lastSlash = Math.max(
+    baseName.lastIndexOf("/"),
+    baseName.lastIndexOf("\\"),
+  );
   const dirPrefix = lastSlash >= 0 ? baseName.slice(0, lastSlash + 1) : "";
   const fileName = lastSlash >= 0 ? baseName.slice(lastSlash + 1) : baseName;
   const extIndex = fileName.lastIndexOf(".");
@@ -33,7 +36,6 @@ function makeUniqueName(baseName: string, existingNames: Set<string>): string {
     }
   }
 }
-
 
 export default function Home() {
   const [tabs, setTabs] = useState<MarkdownTab[]>([]);
@@ -49,7 +51,10 @@ export default function Home() {
   const [isDark, setIsDark] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
   const hasOpenTabsRef = useRef(false);
-  const batchResizeStateRef = useRef<{ startX: number; startWidth: number } | null>(null);
+  const batchResizeStateRef = useRef<{
+    startX: number;
+    startWidth: number;
+  } | null>(null);
   const addFolderInputRef = useRef<HTMLInputElement>(null);
   const addFileInputRef = useRef<HTMLInputElement>(null);
 
@@ -57,7 +62,8 @@ export default function Home() {
   useEffect(() => {
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
     // Read current preference; the inline script may have already set the class
-    const prefersDark = document.documentElement.classList.contains("dark") || mq.matches;
+    const prefersDark =
+      document.documentElement.classList.contains("dark") || mq.matches;
     setIsDark(prefersDark);
 
     const handler = (e: MediaQueryListEvent) => {
@@ -95,7 +101,7 @@ export default function Home() {
     hasOpenTabsRef.current = tabs.length > 0;
   }, [tabs.length]);
 
-    useEffect(() => {
+  useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       if (!hasOpenTabsRef.current) {
         return;
@@ -199,27 +205,30 @@ export default function Home() {
         return next;
       });
     },
-    []
+    [],
   );
 
-  const handleAddFiles = useCallback(async (fileList: FileList) => {
-    const mdFiles: { name: string; content: string }[] = [];
+  const handleAddFiles = useCallback(
+    async (fileList: FileList) => {
+      const mdFiles: { name: string; content: string }[] = [];
 
-    for (const file of Array.from(fileList)) {
-      const rel: string =
-        (file as File & { webkitRelativePath?: string }).webkitRelativePath ||
-        file.name;
+      for (const file of Array.from(fileList)) {
+        const rel: string =
+          (file as File & { webkitRelativePath?: string }).webkitRelativePath ||
+          file.name;
 
-      if (!rel.toLowerCase().endsWith(".md")) continue;
+        if (!rel.toLowerCase().endsWith(".md")) continue;
 
-      const content = await file.text();
-      mdFiles.push({ name: rel, content });
-    }
+        const content = await file.text();
+        mdFiles.push({ name: rel, content });
+      }
 
-    if (mdFiles.length > 0) {
-      handleFilesLoaded(mdFiles);
-    }
-  }, [handleFilesLoaded]);
+      if (mdFiles.length > 0) {
+        handleFilesLoaded(mdFiles);
+      }
+    },
+    [handleFilesLoaded],
+  );
 
   const closeTab = useCallback(
     (id: string) => {
@@ -234,35 +243,43 @@ export default function Home() {
         return next;
       });
     },
-    [activeId]
+    [activeId],
   );
 
-  const closeTabs = useCallback((ids: string[]) => {
-    if (ids.length === 0) return;
+  const closeTabs = useCallback(
+    (ids: string[]) => {
+      if (ids.length === 0) return;
 
-    const closeSet = new Set(ids);
-    setTabs((prev) => {
-      const next = prev.filter((t) => !closeSet.has(t.id));
+      const closeSet = new Set(ids);
+      setTabs((prev) => {
+        const next = prev.filter((t) => !closeSet.has(t.id));
 
-      if (next.length === 0) {
-        setActiveId("");
-      } else if (closeSet.has(activeId) || !next.some((t) => t.id === activeId)) {
-        setActiveId(next[0].id);
-      }
+        if (next.length === 0) {
+          setActiveId("");
+        } else if (
+          closeSet.has(activeId) ||
+          !next.some((t) => t.id === activeId)
+        ) {
+          setActiveId(next[0].id);
+        }
 
-      return next;
-    });
+        return next;
+      });
 
-    setBatchSelection((prev) => {
-      const next = new Set(prev);
-      ids.forEach((id) => next.delete(id));
-      return next;
-    });
-  }, [activeId]);
+      setBatchSelection((prev) => {
+        const next = new Set(prev);
+        ids.forEach((id) => next.delete(id));
+        return next;
+      });
+    },
+    [activeId],
+  );
 
   const activeTab = tabs.find((t) => t.id === activeId);
   const markdownTabs = tabs.filter((t) => t.name.toLowerCase().endsWith(".md"));
-  const selectedMarkdownTabs = markdownTabs.filter((t) => batchSelection.has(t.id));
+  const selectedMarkdownTabs = markdownTabs.filter((t) =>
+    batchSelection.has(t.id),
+  );
 
   // Keep batch selection valid as tabs are opened/closed.
   useEffect(() => {
@@ -435,7 +452,8 @@ export default function Home() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    const base = tab.name.replace(/^.*[\\/]/, "").replace(/\.md$/i, "") || "export";
+    const base =
+      tab.name.replace(/^.*[\\/]/, "").replace(/\.md$/i, "") || "export";
     a.download = `${base}_png_pages.zip`;
     a.click();
     URL.revokeObjectURL(url);
@@ -500,7 +518,12 @@ export default function Home() {
       }
       setExportAction("idle");
     }
-  }, [activeId, exportTabToPngPages, selectedMarkdownTabs, waitForPreviewPaint]);
+  }, [
+    activeId,
+    exportTabToPngPages,
+    selectedMarkdownTabs,
+    waitForPreviewPaint,
+  ]);
 
   const handleBatchClose = useCallback(() => {
     closeTabs(selectedMarkdownTabs.map((t) => t.id));
@@ -515,7 +538,7 @@ export default function Home() {
       };
       setResizingBatchSidebar(true);
     },
-    [batchSidebarWidth]
+    [batchSidebarWidth],
   );
 
   useEffect(() => {
@@ -609,15 +632,31 @@ export default function Home() {
           >
             {isDark ? (
               /* Sun icon – click to go light */
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
                   d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M17.657 17.657l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"
                 />
               </svg>
             ) : (
               /* Moon icon – click to go dark */
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
                   d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"
                 />
               </svg>
@@ -678,7 +717,9 @@ export default function Home() {
                 disabled={!activeTab || exportAction !== "idle"}
                 className="flex items-center gap-1 px-3 py-1.5 text-sm bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white rounded transition-colors"
               >
-                {exportAction === "png" ? "Exporting PNG..." : "Export PNG Pages"}
+                {exportAction === "png"
+                  ? "Exporting PNG..."
+                  : "Export PNG Pages"}
               </button>
               <button
                 onClick={() => {
@@ -726,15 +767,14 @@ export default function Home() {
             </p>
             <UploadZone onFilesLoaded={handleFilesLoaded} />
             <p className="text-xs text-gray-400 text-center mt-4">
-              Files are read locally in your browser. Server upload is only
-              used when exporting to PDF.
+              Files are read locally in your browser. Server upload is only used
+              when exporting to PDF.
             </p>
           </div>
         </main>
       ) : (
         /* Tab + preview screen */
         <div className="flex flex-1 overflow-hidden">
-
           {batchSidebarOpen && (
             <aside
               className="relative shrink-0 border-r border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 p-3 overflow-y-auto"
@@ -790,7 +830,8 @@ export default function Home() {
                     </p>
                   ) : (
                     markdownTabs.map((tab) => {
-                      const shortName = tab.name.split(/[\\/]/).pop() ?? tab.name;
+                      const shortName =
+                        tab.name.split(/[\\/]/).pop() ?? tab.name;
                       return (
                         <label
                           key={tab.id}
@@ -813,23 +854,36 @@ export default function Home() {
                   <button
                     type="button"
                     onClick={handleBatchExportPdf}
-                    disabled={selectedMarkdownTabs.length === 0 || exportAction !== "idle"}
+                    disabled={
+                      selectedMarkdownTabs.length === 0 ||
+                      exportAction !== "idle"
+                    }
                     className="w-full px-3 py-2 text-sm rounded bg-blue-600 hover:bg-blue-700 text-white disabled:bg-blue-400"
                   >
-                    {exportAction === "batch-pdf" ? "Exporting PDFs..." : "Export Selected PDFs"}
+                    {exportAction === "batch-pdf"
+                      ? "Exporting PDFs..."
+                      : "Export Selected PDFs"}
                   </button>
                   <button
                     type="button"
                     onClick={handleBatchExportPngPages}
-                    disabled={selectedMarkdownTabs.length === 0 || exportAction !== "idle"}
+                    disabled={
+                      selectedMarkdownTabs.length === 0 ||
+                      exportAction !== "idle"
+                    }
                     className="w-full px-3 py-2 text-sm rounded bg-emerald-600 hover:bg-emerald-700 text-white disabled:bg-emerald-400"
                   >
-                    {exportAction === "batch-png" ? "Exporting PNGs..." : "Export Selected PNG Pages"}
+                    {exportAction === "batch-png"
+                      ? "Exporting PNGs..."
+                      : "Export Selected PNG Pages"}
                   </button>
                   <button
                     type="button"
                     onClick={handleBatchClose}
-                    disabled={selectedMarkdownTabs.length === 0 || exportAction !== "idle"}
+                    disabled={
+                      selectedMarkdownTabs.length === 0 ||
+                      exportAction !== "idle"
+                    }
                     className="w-full px-3 py-2 text-sm rounded bg-gray-600 hover:bg-gray-500 text-white disabled:bg-gray-400"
                   >
                     Close Selected
@@ -859,10 +913,7 @@ export default function Home() {
               onAddFile={() => addFileInputRef.current?.click()}
             />
             <div className="flex-1 overflow-y-auto">
-              <div
-                ref={previewRef}
-                className="max-w-4xl mx-auto px-6 py-8"
-              >
+              <div ref={previewRef} className="max-w-4xl mx-auto px-6 py-8">
                 {activeTab ? (
                   <MarkdownPreview
                     key={activeTab.id}
