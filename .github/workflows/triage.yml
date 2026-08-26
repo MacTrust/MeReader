@@ -35,7 +35,7 @@ jobs:
           gh pr review ${{ github.event.pull_request.number }} --approve --repo ${{ github.repository }}
       
       - name: Enable Auto Merge for Dependabot
-        if: github.event.pull_request.user.login == 'dependabot[bot]'
+        if: github.event.pull_request.user.login == 'dependabot[bot]' && github.event.pull_request.auto_merge == null
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
