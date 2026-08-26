@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
           headers: {
             "Content-Type": "application/pdf",
             "Content-Disposition": `attachment; filename="${encodeURIComponent(
-              exportTitle
+              exportTitle,
             )}.pdf"`,
           },
         });
@@ -73,7 +73,7 @@ export async function POST(req: NextRequest) {
       console.error("Chromium/puppeteer error:", err);
       return NextResponse.json(
         { error: "PDF generation failed. Please try again." },
-        { status: 503 }
+        { status: 503 },
       );
     }
   } catch (err) {
@@ -147,4 +147,3 @@ function buildHtmlPage(bodyHtml: string, title: string): string {
 </body>
 </html>`;
 }
-

@@ -3,7 +3,11 @@ import JSZip from "jszip";
 import { marked } from "marked";
 import sanitizeHtml from "sanitize-html";
 import { launchChromiumBrowser } from "@/lib/browser";
-import { deriveExportTitle, escapeHtml, sanitizeFileName } from "@/lib/exportTitle";
+import {
+  deriveExportTitle,
+  escapeHtml,
+  sanitizeFileName,
+} from "@/lib/exportTitle";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -26,8 +30,12 @@ export async function POST(req: NextRequest) {
   try {
     const form = await req.formData();
     const file = form.get("file");
-    const format = String(form.get("format") ?? "pdf").toLowerCase() as OutputFormat;
-    const pngMode = String(form.get("pngMode") ?? "pages").toLowerCase() as PngMode;
+    const format = String(
+      form.get("format") ?? "pdf",
+    ).toLowerCase() as OutputFormat;
+    const pngMode = String(
+      form.get("pngMode") ?? "pages",
+    ).toLowerCase() as PngMode;
 
     if (!(file instanceof File)) {
       return jsonError("file is required", 400);
@@ -82,14 +90,17 @@ export async function POST(req: NextRequest) {
           margin: { top: "20mm", bottom: "20mm", left: "20mm", right: "20mm" },
         });
 
-        return new NextResponse(new Blob([Buffer.from(pdfBuffer)], { type: "application/pdf" }), {
-          status: 200,
-          headers: {
-            ...corsHeaders(),
-            "Content-Type": "application/pdf",
-            "Content-Disposition": `attachment; filename="${encodeURIComponent(exportTitle)}.pdf"`,
+        return new NextResponse(
+          new Blob([Buffer.from(pdfBuffer)], { type: "application/pdf" }),
+          {
+            status: 200,
+            headers: {
+              ...corsHeaders(),
+              "Content-Type": "application/pdf",
+              "Content-Disposition": `attachment; filename="${encodeURIComponent(exportTitle)}.pdf"`,
+            },
           },
-        });
+        );
       }
 
       if (pngMode === "single") {
@@ -98,22 +109,25 @@ export async function POST(req: NextRequest) {
           fullPage: true,
         })) as Buffer;
 
-        return new NextResponse(new Blob([Buffer.from(png)], { type: "image/png" }), {
-          status: 200,
-          headers: {
-            ...corsHeaders(),
-            "Content-Type": "image/png",
-            "Content-Disposition": `attachment; filename="${encodeURIComponent(
-              exportTitle
-            )}.png"`,
+        return new NextResponse(
+          new Blob([Buffer.from(png)], { type: "image/png" }),
+          {
+            status: 200,
+            headers: {
+              ...corsHeaders(),
+              "Content-Type": "image/png",
+              "Content-Disposition": `attachment; filename="${encodeURIComponent(
+                exportTitle,
+              )}.png"`,
+            },
           },
-        });
+        );
       }
 
       const totalHeight = await page.evaluate(() => {
         return Math.max(
           document.body.scrollHeight,
-          document.documentElement.scrollHeight
+          document.documentElement.scrollHeight,
         );
       });
 
@@ -139,16 +153,19 @@ export async function POST(req: NextRequest) {
       }
 
       const zipBuffer = await zip.generateAsync({ type: "nodebuffer" });
-      return new NextResponse(new Blob([Buffer.from(zipBuffer)], { type: "application/zip" }), {
-        status: 200,
-        headers: {
-          ...corsHeaders(),
-          "Content-Type": "application/zip",
-          "Content-Disposition": `attachment; filename="${encodeURIComponent(
-            exportTitle
-          )}_png_pages.zip"`,
+      return new NextResponse(
+        new Blob([Buffer.from(zipBuffer)], { type: "application/zip" }),
+        {
+          status: 200,
+          headers: {
+            ...corsHeaders(),
+            "Content-Type": "application/zip",
+            "Content-Disposition": `attachment; filename="${encodeURIComponent(
+              exportTitle,
+            )}_png_pages.zip"`,
+          },
         },
-      });
+      );
     } finally {
       await browser.close();
     }
@@ -318,7 +335,7 @@ function jsonError(message: string, status: number) {
     {
       status,
       headers: corsHeaders(),
-    }
+    },
   );
 }
 
@@ -329,5 +346,3 @@ function corsHeaders(): Record<string, string> {
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
   };
 }
-
-

@@ -2,9 +2,9 @@ name: CI / Test, Build, and Docker
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 permissions:
   contents: read
@@ -29,10 +29,10 @@ jobs:
 
       - name: Print additional debug info
         run: |
-            echo '=============================Docker Info============================='
-            docker info
-            echo '=============================Docker Context============================='
-            docker context show
+          echo '=============================Docker Info============================='
+          docker info
+          echo '=============================Docker Context============================='
+          docker context show
 
       - name: Build Docker Image
         uses: docker/build-push-action@v7

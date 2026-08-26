@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
     if (!uploadedFiles.length) {
       return NextResponse.json(
         { error: "No markdown files found in the uploaded folder" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 

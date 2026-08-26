@@ -29,7 +29,10 @@ export function escapeHtml(str: string): string {
     .replace(/"/g, "&quot;");
 }
 
-export function sanitizeFileName(input: string, fallback: string = "download"): string {
+export function sanitizeFileName(
+  input: string,
+  fallback: string = "download",
+): string {
   const sanitized = input.replace(/[\\/:*?"<>|]+/g, "_").trim();
   return sanitized === "" ? fallback : sanitized;
 }
