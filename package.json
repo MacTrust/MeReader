@@ -1,6 +1,6 @@
 {
   "name": "mereader",
-  "version": "2.5",
+  "version": "2.6",
   "private": false,
   "scripts": {
     "dev": "next dev",
