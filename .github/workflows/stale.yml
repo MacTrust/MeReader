@@ -1,0 +1,21 @@
+name: 'Close stale issues and PRs'
+on:
+  schedule:
+    - cron: '30 1 * * *'
+
+permissions:
+  pull-requests: write
+  contents: read
+  issues: read
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v11.0.0
+        with:
+          only-pr-labels: 'dependencies'
+          stale-pr-message: 'The dependency update is stale. Closing if it cannot pass the quality gate.'
+          close-pr-message: 'The dependency update has timeout.'
+          days-before-stale: 4
+          days-before-close: 2
