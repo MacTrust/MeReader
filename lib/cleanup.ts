@@ -46,7 +46,11 @@ export function cleanupExpiredSessions(): void {
 export function createSession(sessionId: string): string {
   ensureUploadDir();
   const sanitisedSession = path.basename(sessionId);
-  if (!sanitisedSession || sanitisedSession === "." || sanitisedSession === "..") {
+  if (
+    !sanitisedSession ||
+    sanitisedSession === "." ||
+    sanitisedSession === ".."
+  ) {
     throw new Error("Invalid session ID");
   }
   const sessionPath = path.join(UPLOAD_DIR, sanitisedSession);
