@@ -49,7 +49,7 @@ export function createSession(sessionId: string): string {
   if (
     !sanitisedSession ||
     sanitisedSession === "." ||
-    sanitisedSession === ".."
+    sanitisedSession === ".." || sanitisedSession.includes("\0")
   ) {
     throw new Error("Invalid session ID");
   }
