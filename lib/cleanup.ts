@@ -60,7 +60,11 @@ export function safeSessionPath(
   relativePath: string,
 ): string | null {
   const sanitisedSession = path.basename(sessionId);
-  if (!sanitisedSession || sanitisedSession === "." || sanitisedSession === "..") {
+  if (
+    !sanitisedSession ||
+    sanitisedSession === "." ||
+    sanitisedSession === ".."
+  ) {
     return null;
   }
 
