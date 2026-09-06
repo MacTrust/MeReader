@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { readdir } from "fs/promises";
 import path from "path";
-import { UPLOAD_DIR, safeSessionPath } from "@/lib/cleanup";
+import { safeSessionPath } from "@/lib/cleanup";
 import fs from "fs";
 
 async function collectMarkdownFiles(
@@ -45,10 +45,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Session not found" }, { status: 404 });
   }
 
-  const files = await collectMarkdownFiles(
-    path.join(UPLOAD_DIR, path.basename(sessionId)),
-    path.join(UPLOAD_DIR, path.basename(sessionId)),
-  );
+  const files = await collectMarkdownFiles(sessionDir, sessionDir);
 
   return NextResponse.json({ files });
 }
