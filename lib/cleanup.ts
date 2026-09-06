@@ -45,13 +45,14 @@ export function cleanupExpiredSessions(): void {
 
 export function createSession(sessionId: string): string {
   ensureUploadDir();
-  const sessionPath = path.join(UPLOAD_DIR, sessionId);
+  const sanitisedSession = path.basename(sessionId);
+  const sessionPath = path.join(UPLOAD_DIR, sanitisedSession);
   fs.mkdirSync(sessionPath, { recursive: true });
 
   const meta = { uploadedAt: Date.now() };
   fs.writeFileSync(path.join(sessionPath, ".meta"), JSON.stringify(meta));
 
-  return sessionId;
+  return sanitisedSession;
 }
 
 export function safeSessionPath(
@@ -59,6 +60,17 @@ export function safeSessionPath(
   relativePath: string,
 ): string | null {
   const sanitisedSession = path.basename(sessionId);
+  if (!sanitisedSession || sanitisedSession === "." || sanitisedSession === "..") {
+    return null;
+  }
+
+  if (path.isAbsolute(relativePath) || relativePath.includes("\0")) {
+    return null;
+  }
+  if (relativePath.split(/[/\\]/).includes("..")) {
+    return null;
+  }
+
   const sessionDir = path.join(UPLOAD_DIR, sanitisedSession);
   const target = path.resolve(sessionDir, relativePath);
 
